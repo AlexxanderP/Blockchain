@@ -9,7 +9,7 @@ from flask import Flask, jsonify, request
 
 
 
-DIFFICULTY = 3
+DIFFICULTY = 6
 class Blockchain(object):
     def __init__(self):
         self.chain = []
@@ -126,21 +126,44 @@ node_identifier = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
 
 
-@app.route('/mine', methods=['GET'])
+@app.route('/mine', methods=['POST'])
 def mine():
-    # Run the proof of work algorithm to get the next proof    #######ELEVEN
-    proof = blockchain.proof_of_work(blockchain.last_block)
+        # Handle non-json response
+    try:
+        values = request.get_json()
+    except ValueError:
+        print("Error:  Non-json response")
+        print("Response returned:")
+        print(request)
+        return "error"
+
+    required = ['proof', 'id']
+    if not all(k in values for k in required):
+        response = {'message': "Missing Values"}
+        return jsonify(response), 400
+
+    submitted_proof = values['proof']
+
+    #Determine if proof is Valid
+    last_block = blockchain.last_block
+    last_block_string = json.dumps(last_block, sort_keys=True)
+    if blockchain.valid_proof(last_block_string, submitted_proof):
+
     # Forge the new Block by adding it to the chain with the proof
-    previous_hash = blockchain.hash(blockchain.last_block)
-    new_block = blockchain.new_block(proof, previous_hash)
-    response = {
-        # TODO: Send a JSON response with the new block #####TWELVE
-        'block': new_block
-    }
+        previous_hash = blockchain.hash(blockchain.last_block)
+        new_block = blockchain.new_block(submitted_proof, previous_hash)
+        response = {
+            'message': "New Block Forged!!!!",
+            # TODO: Send a JSON response with the new block #####TWELVE
+            'block': new_block
+        }
 
-    return jsonify(response), 200
-
-
+        return jsonify(response), 200
+    else: 
+        response = {
+            'message': "Proof invalid or submitted"
+        }
+        return jsonify(response), 200
 @app.route('/chain', methods=['GET'])
 def full_chain():
     response = {

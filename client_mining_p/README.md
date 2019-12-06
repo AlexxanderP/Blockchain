@@ -9,8 +9,8 @@ Furthermore, the amount of work needed to actually mine a block is a bit low. We
 _Server_
 Modify the server we created to:
 
-- Remove the `proof_of_work` function from the server.
-- Change `valid_proof` to require _6_ leading zeroes.
+- **\***Remove the `proof_of_work` function from the server.
+- **\***Change `valid_proof` to require _6_ leading zeroes.
   **\*** Add an endpoint called `last_block` that returns the last block in the chain
 - Modify the `mine` endpoint to instead receive and validate or reject a new proof sent by a client.
   - It should accept a POST
@@ -27,9 +27,9 @@ Create a client application that will:
 - Run the `proof_of_work` function until a valid proof is found, validating or rejecting each attempt. Use a copy of `valid_proof` to assist.
 - Print messages indicating that this has started and finished.
 - Modify it to generate proofs with _6_ leading zeroes.
-- Print a message indicating the success or failure response from the server
+  -\*\*\*\* Print a message indicating the success or failure response from the server
 - Add any coins granted to a simple integer total, and print the amount of coins the client has earned
-  **\*\*\*** Continue mining until the app is interrupted. ////////////DONE\$\$$$
-******* Change the name in `my_id.txt` to your name ///////////////DONE$$$$
-******* (Stretch) Handle non-json responses sent by the server in the event of an error, without crashing the miner ///////////////DONE$$\$\$
+  \*\*\\*\\*\\*\*\* Continue mining until the app is interrupted. ////////////DONE\\$\\$\$\$
+  \*\*\*\*\*\*\* Change the name in `my_id.txt` to your name ///////////////DONE\$\$\$\$
+  \*\*\*\*\*\*\* (Stretch) Handle non-json responses sent by the server in the event of an error, without crashing the miner ///////////////DONE\$\$\\$\$
 - Stretch: Add a timer to keep track of how long it takes to find a proof
